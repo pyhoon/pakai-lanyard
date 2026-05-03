@@ -18,6 +18,7 @@ Library4=minihtml
 Library5=minijs
 Library6=miniormutils
 Library7=webapiutils
+Library8=lanyard
 Module1=AuthFilter
 Module10=HttpsFilter
 Module11=MainView
@@ -37,7 +38,7 @@ Module7=CategoriesView
 Module8=FindApiHandler
 Module9=HelpHandler
 NumberOfFiles=4
-NumberOfLibraries=7
+NumberOfLibraries=8
 NumberOfModules=18
 Version=10.5
 @EndOfDesignText@
@@ -60,14 +61,14 @@ Version=10.5
 #Macro: Title, Convert classes, ide://run?File=%PROJECT%\convert.bat
 #Macro: Title, Update Manifest, ide://run?File=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%\..&Args=%PROJECT%\..&Args=Version&Args=0.10
 #Macro: Title, Create B4xLib, ide://run?File=%JAVABIN%\jar.exe&WorkingDirectory=..\&Args=-cMf&Args=..\release\Lanyard.b4xlib&Args=*.b4x_excluded&Args=Snippets&Args=..\manifest.txt&Args=..\LICENSE.txt
-#Macro: Title, Release folder, ide://run?File=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\..\release
-#Macro: Title, Copy to AddLibs, ide://run?File=%COMSPEC%&Args=/c&Args=copy&Args=%PROJECT%\..\..\release\*.b4xlib&Args=%ADDITIONAL%\..\B4X
+#Macro: Title, Release folder, ide://run?File=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\release
+#Macro: Title, Copy to AddLibs, ide://run?File=%COMSPEC%&Args=/c&Args=copy&Args=%PROJECT%\..\release\*.b4xlib&Args=%ADDITIONAL%\..\B4X
 #Macro: Title, ModelGenerator, ide://run?File=%ADDITIONAL%\modgen.jar&Args=%STATE1%&codesync=True
 #End Region
 Sub Process_Globals
-	Public DB       As MiniORM
-	Public App      As EndsMeet
-	Public Api      As ApiSettings
+	Public DB	As MiniORM
+	Public App	As EndsMeet
+	Public Api	As ApiSettings
 	Public Const APP_VERSION As String = "1.00"
 	Type AlertInfo (Message As String, Status As String)
 	Type ToastInfo (Entity As String, Action As String, Message As String, Status As String)
@@ -79,41 +80,41 @@ Sub AppStart (Args() As String)
 	App.Initialize
 	App.LoadConfig
 	App.LogEnabled = True
-        #If Release
+    #If Release
 	'App.ssl.Enabled = True
 	'App.RedirectToHttps = True
-        #End If
-
+    #End If
+	
 	' Frontend using HTMX and AlpineJS
 	App.Get("", "ProductsHandler")
 	App.Get("/categories", "CategoriesHandler")
 	App.Rest("/hx/products/*", "ProductsHandler")
 	App.Rest("/hx/categories/*", "CategoriesHandler")
-
+	
 	' Auth routes
 	App.Get("/login", "AuthHandler")
 	App.Get("/logout", "AuthHandler")
 	App.Get("/register", "AuthHandler")
 	App.Post("/login", "AuthHandler")
 	App.Post("/register", "AuthHandler")
-        
+	
 	' Auth Filter
 	App.srvr.AddFilter("/*", "AuthFilter", False)
-
+	
 	' For REST API
 	App.Route("/api/find", "FindApiHandler", Array("get", "post"))
 	App.Get("/api/find/products-by-category_id/*", "FindApiHandler")
 	App.Rest("/api/products/*", "ProductsApiHandler")
 	App.Rest("/api/categories/*", "CategoriesApiHandler")
 	App.Get("/help", "HelpHandler")
-
+	
 	App.Start
 	App.LogStartupMessage
 	App.ctx.Put("VERSION", APP_VERSION)
 	Log($"App version: ${APP_VERSION}"$)
 	Log($"Open the following URL from your web browser"$)
 	Log(App.ServerUrl)
-
+	
 	Api = App.api
 	Api.EnableHelp = True
 	ORM.InitDatabase
