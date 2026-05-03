@@ -1,1 +1,4 @@
+Author=Aeric
 Version=0.10
+CustomClassTemplates=Auth Filter|AuthFilter,Auth Handler|AuthHandler,Auth View|AuthView,Users Model|UsersModel
+Supported Platforms=B4J
