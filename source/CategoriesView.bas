@@ -381,9 +381,9 @@ End Sub
 
 Private Sub LogoutLink As MiniHtml
 	Dim li1 As MiniHtml = MH.Li
-	li1.cls("nav-item")
+	li1.cls("nav-item d-block d-lg-block")
 	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-	a1.cls("nav-link")
+	a1.cls("nav-link float-end")
 	a1.attr("href", "/logout")
 	MH.Icon.up(a1).cls("bi bi-box-arrow-right me-2")
 	a1.text("Logout")
