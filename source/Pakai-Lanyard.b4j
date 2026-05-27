@@ -58,7 +58,7 @@ Version=10.5
 #AdditionalJar: sqlite-jdbc-3.7.2
 #End If
 #Region  Macros
-#Macro: Title, Convert classes, ide://run?File=%PROJECT%\convert.bat
+#Macro: Title, Class Templates, ide://run?File=%PROJECT%\create_excluded.bat&Args=..\AuthFilter.bas&Args=..\AuthHandler.bas&Args=..\AuthView.bas&Args=..\UsersModel.bas
 #Macro: Title, Update Manifest, ide://run?File=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%\..&Args=%PROJECT%\..&Args=Version&Args=0.10
 #Macro: Title, Create B4xLib, ide://run?File=%JAVABIN%\jar.exe&WorkingDirectory=..\&Args=-cMf&Args=..\release\Lanyard.b4xlib&Args=*.b4x_excluded&Args=Snippets&Args=..\manifest.txt&Args=..\LICENSE.txt
 #Macro: Title, Release folder, ide://run?File=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\release
