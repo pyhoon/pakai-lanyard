@@ -46,9 +46,8 @@ Public Sub Show As String
 	End If
 	Dim page1 As MiniHtml = ReadFromCache(CacheName)
 	Dim doc As MiniHtml
-	doc.Initialize("")
-	doc.Write("<!DOCTYPE html>")
-	doc.Write(page1.build)
+	doc.Initialize("doctype")
+	doc.Append(page1.build)
 	Return doc.ToString
 End Sub
 
@@ -248,11 +247,11 @@ End Sub
 
 Private Sub ProductsTableRow As MiniHtml
 	Dim tr1 As MiniHtml = MH.Tr
-	MH.Td.up(tr1).cls("align-middle").sty("text-align: right")'.text("{id}")
-	MH.Td.up(tr1).cls("align-middle")'.text("{code}")
-	MH.Td.up(tr1).cls("align-middle")'.text("{name}")
-	MH.Td.up(tr1).cls("align-middle")'.text("{category}")
-	MH.Td.up(tr1).cls("align-middle").sty("text-align: right")'.text("{price}")
+	MH.Td.up(tr1).cls("align-middle").sty("text-align: right")
+	MH.Td.up(tr1).cls("align-middle")
+	MH.Td.up(tr1).cls("align-middle")
+	MH.Td.up(tr1).cls("align-middle")
+	MH.Td.up(tr1).cls("align-middle").sty("text-align: right")
 	Dim td6 As MiniHtml = MH.Td.up(tr1)
 	td6.cls("align-middle text-center px-1 py-1")
 	Dim a1 As MiniHtml = MH.Anchor.up(td6)

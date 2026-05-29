@@ -46,8 +46,7 @@ Public Sub Show As String
 	End If
 	Dim page1 As MiniHtml = ReadFromCache(CacheName)
 	Dim doc As MiniHtml
-	doc.Initialize("")
-	doc.Write("<!DOCTYPE html>")
+	doc.Initialize("doctype")
 	doc.Write(page1.build)
 	Return doc.ToString
 End Sub

@@ -250,9 +250,8 @@ Private Sub GenerateHelpPage As String 'ignore
 	MH.Script.up(body1).text(script2.SubString2(0, script2.LastIndexOf(CRLF))).multiline
 	
 	Dim doc As MiniHtml
-	doc.Initialize("")
-	doc.Write("<!DOCTYPE html>")
-	doc.Write(html1.build)
+	doc.Initialize("doctype")
+	doc.Append(html1.build)
 	Return doc.ToString
 End Sub
 
