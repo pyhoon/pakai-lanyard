@@ -1,4 +1,4 @@
-﻿' Auth Handler
+' Auth Handler
 ' Version 1.00
 Sub Class_Globals
 	Private App As EndsMeet
