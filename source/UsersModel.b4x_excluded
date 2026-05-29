@@ -1,4 +1,4 @@
-﻿' Users Model
+' Users Model
 ' Version 1.00
 Sub Class_Globals
 	Private DB As MiniORM
