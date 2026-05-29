@@ -108,7 +108,7 @@ Private Sub CategoriesPage As MiniHtml
 	main1.LoadModal(ContainerModal)
 	main1.LoadToast(ContainerToast)
 	Dim page1 As MiniHtml = main1.Render
-	Dim navitem1 As MiniHtml = GetNavItem(page1)
+	Dim navitem1 As MiniHtml = page1.ChildById("nav-item")
 	If App.api.EnableHelp Then
 		HelpLink.up(navitem1)
 	End If
@@ -154,16 +154,6 @@ Private Sub ContainerContent As MiniHtml
 	Return row1
 End Sub
 
-' Retrieve Nav item element
-Private Sub GetNavItem (dom As MiniHtml) As MiniHtml
-	Dim body1 As MiniHtml = dom.Child(1)
-	Dim nav1 As MiniHtml = body1.Child(1)
-	Dim container1 As MiniHtml = nav1.Child(0)
-	Dim navbar1 As MiniHtml = container1.Child(3)
-	Dim navitem1 As MiniHtml = navbar1.Child(0)
-	Return navitem1
-End Sub
-
 Private Sub CategoriesTableFilled (data As List) As MiniHtml
 	Dim CacheName As String = "Categories Table"
 	If ExistInCache(CacheName) = False Then
@@ -176,14 +166,14 @@ Private Sub CategoriesTableFilled (data As List) As MiniHtml
 	End If
 
 	Dim table1 As MiniHtml = ReadFromCache("Categories Table")
-	Dim tbody1 As MiniHtml = table1.Child(1)
+	Dim tbody1 As MiniHtml = table1.ChildByName("tbody")
 	tbody1.Children.Clear
 	For Each row As Map In data
 		Dim tr1 As MiniHtml = ReadFromCache("Categories Table Row") ' bytes()
-		tr1.Child(0).text2(row.Get("id"))
-		tr1.Child(1).text2(row.Get("category_name"))
-		tr1.Child(2).Child(0).attr("hx-get", "/hx/categories/edit/" & row.Get("id"))
-		tr1.Child(2).Child(1).attr("hx-get", "/hx/categories/delete/" & row.Get("id"))
+		tr1.ChildByIndex(0).text2(row.Get("id"))
+		tr1.ChildByIndex(1).text2(row.Get("category_name"))
+		tr1.ChildByIndex(2).ChildByIndex(0).attr("hx-get", "/hx/categories/edit/" & row.Get("id"))
+		tr1.ChildByIndex(2).ChildByIndex(1).attr("hx-get", "/hx/categories/delete/" & row.Get("id"))
 		tr1.up(tbody1)
 	Next
 	Return table1

@@ -43,9 +43,9 @@ Public Sub Render As MiniHtml
 	'body1.cdn("script", "$SERVER_URL$/assets/js/bootstrap.min.js")
 	'body1.cdn("script", "$SERVER_URL$/assets/js/htmx.min.js")
 	body1.cdn2("script", "https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.min.js", _
-	"sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y", "anonymous")
+		"sha384-G/EV+4j2dNv+tEPo3++6LCgdCROaejBqfUeNjuKAiuXbjrxilcCdDz6ZAVfHWe1Y", "anonymous")
 	body1.cdn2("script", "https://cdn.jsdelivr.net/npm/htmx.org@2.0.8/dist/htmx.min.js", _
-	"sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz", "anonymous")
+		"sha384-/TgkGk7p307TH7EXJDuUlgG3Ce1UVolAOFopFekQkkXihi5u/6OCvVKyz1W+idaz", "anonymous")
 	body1.cdn("script", "$SERVER_URL$/assets/js/app.js")
 	Return page1
 End Sub
@@ -102,6 +102,7 @@ Private Sub PageBody As MiniHtml
 	
 	Dim navitem1 As MiniHtml = MH.Li.up(navbar1)
 	navitem1.cls("nav-item d-block d-lg-none")
+	navitem1.Id = "nav-item"
 	Dim a1 As MiniHtml = MH.Anchor.up(navitem1)
 	a1.cls("nav-link float-end")
 	a1.attr("href", "https://paypal.me/aeric80/")
@@ -124,9 +125,9 @@ Private Sub PageBody As MiniHtml
 	Dim content1 As MiniHtml = MH.Div.up(body1).cls("content m-3")
 	Dim padding2 As MiniHtml = MH.Div.up(content1).cls("p-2")
 	
-	If mContent.IsInitialized Then mContent.up(padding2)
-	If mSubContent.IsInitialized Then mSubContent.up(padding2)
-	If mModal.IsInitialized Then mModal.up(body1)
+	If Initialized(mContent) Then mContent.up(padding2)
+	If Initialized(mSubContent) Then mSubContent.up(padding2)
+	If Initialized(mModal) Then mModal.up(body1)
 	MH.Div.up(body1).cls("bottom")
 	Return body1
 End Sub
