@@ -1,5 +1,5 @@
 ' Users Model
-' Version 1.00
+' Version 0.30
 Sub Class_Globals
 	Private DB As MiniORM
 	Type Users (username As String, email As String, password As String, role As String)

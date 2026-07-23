@@ -5,10 +5,10 @@ Type=Class
 Version=10.5
 @EndOfDesignText@
 ' Users Model
-' Version 1.00
+' Version 0.30
 Sub Class_Globals
 	Private DB As MiniORM
-	Type Users (username As String, email As String, password As String, role As String)
+	Type Users (username As String, email As String, hash As String, salt As String, role As String)
 End Sub
 
 Public Sub Initialize
@@ -18,16 +18,16 @@ End Sub
 Public Sub Create (Username As String, Email As String, Password As String, Role As String)
 	DB.Open
 	DB.Table = "tbl_users"
-	DB.Columns = Array("username", "email", "password", "role")
+	DB.Columns = Array("username", "email", "hash", "salt", "role")
 	DB.Parameters = Array(Username, Email, Password, Role)
 	DB.Save
 End Sub
 
-Public Sub FindRowByUsername (Username As String) As Boolean
+Public Sub FindRowByEmail (Email As String) As Boolean
 	DB.Open
 	DB.Table = "tbl_users"
-	DB.Conditions = Array("username = ?")
-	DB.Parameters = Array(Username)
+	DB.Conditions = Array("email = ?")
+	DB.Parameters = Array(Email)
 	DB.Query
 	Return DB.Found
 End Sub
@@ -36,12 +36,12 @@ Public Sub Found As Boolean
 	Return DB.Found
 End Sub
 
-Public Sub GetRowByUsername (Username As String) As Map
+Public Sub GetRowByEmailAndPassword (Email As String, Password As String) As Map
 	DB.Open
 	DB.Table = "tbl_users"
-	DB.Columns = Array("username", "email", "password", "role")
-	DB.Condition = "username = ?"
-	DB.Parameter = Username
+	DB.Columns = Array("username", "email", "hash", "salt", "role")
+	DB.Condition = "email = ?"
+	DB.Parameter = Email
 	DB.Query
 	If DB.Found Then
 		Return DB.First
@@ -69,7 +69,8 @@ Public Sub CreateUsersTable
 	DB.Table = "tbl_users"
 	DB.Columns.Add(CreateMap("Name": "username", "Null": False))
 	DB.Columns.Add(CreateMap("Name": "email", "Null": False))
-	DB.Columns.Add(CreateMap("Name": "password", "Null": False))
+	DB.Columns.Add(CreateMap("Name": "hash", "Null": False))
+	DB.Columns.Add(CreateMap("Name": "salt", "Null": False))
 	DB.Columns.Add(CreateMap("Name": "role", "Default": "user"))
 	DB.Create
 	

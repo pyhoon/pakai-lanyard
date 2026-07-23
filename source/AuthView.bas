@@ -5,7 +5,7 @@ Type=Class
 Version=10.5
 @EndOfDesignText@
 ' Auth View
-' Version 1.00
+' Version 0.30
 Sub Class_Globals
 	Private App As EndsMeet
 End Sub

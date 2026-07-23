@@ -5,9 +5,11 @@ Type=Class
 Version=10.5
 @EndOfDesignText@
 ' Auth Handler
-' Version 1.00
+' Version 0.30
 Sub Class_Globals
 	Private App As EndsMeet
+	Private Path As String
+	Private Method As String	
 	Private View As AuthView
 	Private Model As UsersModel
 	Private Request As ServletRequest
@@ -23,8 +25,8 @@ End Sub
 Sub Handle (req As ServletRequest, resp As ServletResponse)
 	Request = req
 	Response = resp
-	Dim Path As String = Request.RequestURI
-	Dim Method As String = Request.Method.ToUpperCase
+	Method = Request.Method
+	Path = Request.RequestURI
 	Log($"${Method}: ${Path}"$)
 	If Path = "/login" Then
 		If Method = "GET" Then
@@ -58,12 +60,12 @@ Private Sub ShowRegisterPage (Message As String)
 End Sub
 
 Private Sub HandleLogin
-	Dim user As String = Request.GetParameter("username")
+	Dim email As String = Request.GetParameter("email")
 	Dim pass As String = Request.GetParameter("password")
 	
-	Dim row As Map = Model.GetRowByUsername(user)
+	Dim row As Map = Model.GetRowByEmailAndPassword(email, pass)
 	If Model.Error.IsInitialized Then
-		ShowRegisterPage("Error creating user: " & Model.Error.Message)
+		ShowRegisterPage("Error querying user: " & Model.Error.Message)
 		'ShowAlert(Model.Error.Message, "danger")
 		Return
 	End If
@@ -84,7 +86,7 @@ Private Sub HandleRegister
 	Dim email As String = Request.GetParameter("email")
 	Dim pass As String = Request.GetParameter("password")
 	
-	Dim Found As Boolean = Model.FindRowByUsername(user)
+	Dim Found As Boolean = Model.FindRowByEmail(email)
 	If Model.Error.IsInitialized Then
 		ShowRegisterPage("Error creating user: " & Model.Error.Message)
 		'ShowAlert(Model.Error.Message, "danger")
@@ -109,8 +111,3 @@ Private Sub HandleLogout
 	Request.GetSession.Invalidate
 	Response.SendRedirect("/login")
 End Sub
-
-'Private Sub ShowAlert (Message As String, Status As String)
-'	Dim info As AlertInfo = Main.CreateAlertInfo(Message, Status)
-'	App.WriteHtml(Response, View.Alert(info))
-'End Sub

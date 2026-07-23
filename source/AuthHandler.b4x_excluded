@@ -1,5 +1,5 @@
 ' Auth Handler
-' Version 1.00
+' Version 0.30
 Sub Class_Globals
 	Private App As EndsMeet
 	Private View As AuthView
