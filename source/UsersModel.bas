@@ -37,17 +37,36 @@ Public Sub Found As Boolean
 End Sub
 
 Public Sub GetRowByEmailAndPassword (Email As String, Password As String) As Map
+	Dim salt As String
+	Dim hash As String
 	DB.Open
 	DB.Table = "tbl_users"
-	DB.Columns = Array("username", "email", "hash", "salt", "role")
+	DB.Columns = Array("username", "email", "admin", "salt", "hash")
 	DB.Condition = "email = ?"
 	DB.Parameter = Email
 	DB.Query
 	If DB.Found Then
-		Return DB.First
+		salt = DB.First.GetDefault("salt", "")
+		hash = DB.First.GetDefault("hash", "")
+		If hash = Encryption.MD5(Password & salt) Then
+			Return CreateMap("first_name": DB.First.Get("first_name"), "last_name": DB.First.Get("last_name"), "admin": DB.First.Get("admin"))
+		End If
 	End If
 	Return CreateMap()
 End Sub
+
+'Public Sub GetRowByEmailAndPassword (Email As String, Password As String) As Map
+'	DB.Open
+'	DB.Table = "tbl_users"
+'	DB.Columns = Array("username", "email", "hash", "salt", "role")
+'	DB.Condition = "email = ?"
+'	DB.Parameter = Email
+'	DB.Query
+'	If DB.Found Then
+'		Return DB.First
+'	End If
+'	Return CreateMap()
+'End Sub
 
 Public Sub First As Map
 	Return DB.First
