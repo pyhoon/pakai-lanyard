@@ -338,36 +338,3 @@ Private Sub ContainerToast As MiniHtml
 	button1.attr("data-bs-dismiss", "toast")
 	Return div1
 End Sub
-
-'Private Sub LogoutLink As MiniHtml
-'	Dim li1 As MiniHtml = MH.Li
-'	li1.cls("nav-item d-block d-lg-block")
-'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-'	a1.cls("nav-link float-end")
-'	a1.attr("href", "/logout")
-'	MH.Icon.up(a1).cls("bi bi-box-arrow-right me-2")
-'	a1.text("Logout")
-'	Return li1
-'End Sub
-
-'Private Sub HomeLink As MiniHtml
-'	Dim li1 As MiniHtml = MH.Li
-'	li1.cls("nav-item d-block d-lg-block")
-'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-'	a1.cls("nav-link float-end")
-'	a1.attr("href", "/")
-'	MH.Icon.up(a1).cls("bi bi-house me-2")
-'	a1.text("Home")
-'	Return li1
-'End Sub
-'
-'Private Sub HelpLink As MiniHtml
-'	Dim li1 As MiniHtml = MH.Li
-'	li1.cls("nav-item d-block d-lg-block")
-'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-'	a1.cls("nav-link float-end")
-'	a1.attr("href", "/help")
-'	MH.Icon.up(a1).cls("bi bi-gear me-2")
-'	a1.text("API")
-'	Return li1
-'End Sub
