@@ -75,8 +75,8 @@ Private Sub ContainerLogin As MiniHtml
 	Dim form1 As MiniHtml = MH.Form.up(body1).attr("method", "POST").attr("action", "/login")
 	
 	Dim group1 As MiniHtml = MH.Div.up(form1).cls("mb-3")
-	MH.Label.up(group1).text("Username")
-	MH.Input.up(group1).cls("form-control").attr("name", "username").attr("required", "true")
+	MH.Label.up(group1).text("Email")
+	MH.Input.up(group1).cls("form-control").attr("name", "email").attr("required", "true")
 	
 	Dim group2 As MiniHtml = MH.Div.up(form1).cls("mb-3")
 	MH.Label.up(group2).text("Password")
