@@ -205,6 +205,7 @@ End Sub
 ' ============================
 '  Bootstrap Layout Helpers
 ' ============================
+
 Public Sub Container As MiniHtml
 	Return Div.cls("container")
 End Sub
@@ -483,6 +484,39 @@ Public Sub HxPost (href As String, target As String, swap As String) As MiniHtml
 	Return btn1
 End Sub
 
+Public Sub ContainerHxGet (id As String, url As String, trigger As String, text As String) As MiniHtml
+	Dim div1 As MiniHtml = Div
+	div1.attr("id", id)
+	div1.attr("hx-get", url)
+	div1.attr("hx-trigger", trigger)
+	div1.text(text)
+	Return div1
+End Sub
+
+Public Sub FormHxPost (url As String, target As String) As MiniHtml
+	Dim form1 As MiniHtml = Form
+	form1.attr("hx-post", url)
+	form1.attr("hx-target", target)
+	form1.attr("hx-swap", "innerHTML")
+	Return form1
+End Sub
+
+Public Sub FormHxPut (url As String, target As String) As MiniHtml
+	Dim form1 As MiniHtml = Form
+	form1.attr("hx-put", url)
+	form1.attr("hx-target", target)
+	form1.attr("hx-swap", "innerHTML")
+	Return form1
+End Sub
+
+Public Sub FormHxDelete (url As String, target As String) As MiniHtml
+	Dim form1 As MiniHtml = Form
+	form1.attr("hx-put", url)
+	form1.attr("hx-target", target)
+	form1.attr("hx-swap", "innerHTML")
+	Return form1
+End Sub
+
 ' ============================
 '  Navigation Helpers
 ' ============================
@@ -746,10 +780,10 @@ End Sub
 
 Public Sub ButtonSearch (text As String, cls As String, hx_post As String, hx_target As String) As MiniHtml
 	Dim searchBtn As MiniHtml = Button
-	searchBtn.cls("btn btn-danger btn-md pl-3 pr-3 ml-3 mt-2")
-	searchBtn.text("Submit")
-	searchBtn.attr("hx-post", "/hx/products/table")
-	searchBtn.attr("hx-target", "#products-container")
+	searchBtn.cls(cls)
+	searchBtn.text(text)
+	searchBtn.attr("hx-post", hx_post)
+	searchBtn.attr("hx-target", hx_target)
 	searchBtn.attr("hx-swap", "innerHTML")
 	Return searchBtn
 End Sub
@@ -883,7 +917,7 @@ End Sub
 
 Public Sub ResponsiveHeader As MiniHtml
 	Dim head1 As MiniHtml = Head
-	Meta.up(head1).attr("http-equiv", "content-type" ).attr("content", "text/html; charset=utf-8")
+	Meta.up(head1).attr("charset", "utf-8")
 	Meta.up(head1).attr("name", "viewport").attr("content", "width=device-width, initial-scale=1")
 	Return head1
 End Sub
