@@ -64,22 +64,45 @@ Private Sub HandleLogin
 	Dim pass As String = Request.GetParameter("password")
 	
 	Dim row As Map = Model.GetRowByEmailAndPassword(email, pass)
+	Dim user As String = row.Get("first_name") & " " & row.Get("last_name")
+	Dim admin As String = row.Get("admin")
 	If Model.Error.IsInitialized Then
-		ShowRegisterPage("Error querying user: " & Model.Error.Message)
-		'ShowAlert(Model.Error.Message, "danger")
+		ShowLoginPage("Error querying user: " & Model.Error.Message)
 		Return
 	End If
 	If row.Size > 0 Then
-		If row.Get("password") = pass Then ' Simple check for now
-			Request.GetSession.SetAttribute("user", user)
-			Request.GetSession.SetAttribute("role", row.Get("role"))
+		If 1 = row.Get("admin") Then
+			Request.GetSession.SetAttribute("user", user.Trim)
+			Request.GetSession.SetAttribute("admin", admin)
 			Response.SendRedirect("/")
 			Return
 		End If
 	End If
 	
-	ShowLoginPage("Invalid username or password")
+	ShowLoginPage("Invalid email or password")
 End Sub
+
+'Private Sub HandleLogin
+'	Dim email As String = Request.GetParameter("email")
+'	Dim pass As String = Request.GetParameter("password")
+'	
+'	Dim row As Map = Model.GetRowByEmailAndPassword(email, pass)
+'	If Model.Error.IsInitialized Then
+'		ShowLoginPage("Error querying user: " & Model.Error.Message)
+'		'ShowAlert(Model.Error.Message, "danger")
+'		Return
+'	End If
+'	If row.Size > 0 Then
+'		If row.Get("password") = pass Then ' Simple check for now
+'			Request.GetSession.SetAttribute("email", email)
+'			Request.GetSession.SetAttribute("role", row.Get("role"))
+'			Response.SendRedirect("/")
+'			Return
+'		End If
+'	End If
+'	
+'	ShowLoginPage("Invalid username or password")
+'End Sub
 
 Private Sub HandleRegister
 	Dim user As String = Request.GetParameter("username")
