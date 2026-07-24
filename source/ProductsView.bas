@@ -70,7 +70,6 @@ Public Sub Modal (Action As String, CategoryList As List, Data As Map) As String
 				Dim opt As MiniHtml = MH.Option.up(select1)
 				opt.attr("value", row.Get("id"))
 				opt.text(row.Get("category_name"))
-				'If row.Get("id") = Data.Get("category_id") Then opt.selected
 				opt.selectedIf(row.Get("id") = Data.Get("category_id"))
 			Next
 			Dim input2 As MiniHtml = modal1.ChildById("code")
@@ -458,63 +457,3 @@ Private Sub ContainerToast As MiniHtml
 	close1.attr("data-bs-dismiss", "toast")
 	Return div1
 End Sub
-'
-'Private Sub GitHubLink As MiniHtml
-'	Dim div1 As MiniHtml = MH.Div.cls("text-center mb-3")
-'	Dim a1 As MiniHtml = MH.Anchor.up(div1)
-'	a1.attr("href", "https://github.com/pyhoon/pakai-server-b4j")
-'	a1.cls("text-primary mr-1")
-'	a1.attr("aria-label", "github")
-'	a1.attr("title", "GitHub")
-'	a1.attr("target", "_blank")
-'	Dim svg1 As MiniHtml = MH.Svg.up(a1)
-'	svg1.attr("aria-hidden", "true")
-'	svg1.attr("width", "24")
-'	svg1.attr("height", "24")
-'	svg1.attr("version", "1.1")
-'	svg1.attr("viewBox", "0 0 16 16")
-'	Dim path1 As MiniHtml = MH.Path.up(svg1)
-'	path1.attr("fill-rule", "evenodd")
-'	path1.attr("d", "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z")
-'	Dim a2 As MiniHtml = MH.Anchor.up(div1)
-'	a2.attr("href", "https://github.com/pyhoon/pakai-server-b4j")
-'	a2.sty("text-decoration: none")
-'	a2.attr("target","_blank")
-'	Dim span1 As MiniHtml = MH.Span.up(a2)
-'	span1.sty("vertical-align: middle")
-'	span1.text("GitHub")
-'	Return div1
-'End Sub
-
-'Private Sub LogoutLink As MiniHtml
-'	Dim li1 As MiniHtml = MH.Li
-'	li1.cls("nav-item d-block d-lg-block")
-'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-'	a1.cls("nav-link float-end")
-'	a1.attr("href", "/logout")
-'	MH.Icon.up(a1).cls("bi bi-box-arrow-right me-2")
-'	a1.text("Logout")
-'	Return li1
-'End Sub
-'
-'Private Sub CategoriesLink As MiniHtml
-'	Dim li1 As MiniHtml = MH.Li
-'	li1.cls("nav-item d-block d-lg-block")
-'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-'	a1.cls("nav-link float-end")
-'	a1.attr("href", "/categories")
-'	MH.Icon.up(a1).cls("bi bi-tag me-2")
-'	a1.text("Categories")
-'	Return li1
-'End Sub
-'
-'Private Sub HelpLink As MiniHtml
-'	Dim li1 As MiniHtml = MH.Li
-'	li1.cls("nav-item d-block d-lg-block")
-'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-'	a1.cls("nav-link float-end")
-'	a1.attr("href", "/help")
-'	MH.Icon.up(a1).cls("bi bi-gear me-2")
-'	a1.text("API")
-'	Return li1
-'End Sub
