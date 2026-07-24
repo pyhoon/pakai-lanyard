@@ -5,44 +5,31 @@ Type=Class
 Version=10.5
 @EndOfDesignText@
 ' Products View
-' Version 6.80
+' Version 0.30
 Sub Class_Globals
 	Private App As EndsMeet
-	Private mShowLogout As Boolean
 End Sub
 
 Public Sub Initialize
 	App = Main.App
 End Sub
 
-Public Sub setShowLogout (Value As Boolean)
-	mShowLogout = Value
-End Sub
-
 Private Sub ExistInCache (Key As String) As Boolean
-	Return App.ctx.ContainsKey(Key)
+	Return MC.ExistInCache(App.ctx, Key)
 End Sub
 
 Private Sub ReadFromCache (Key As String) As Object
-	Dim Value As Object = App.ctx.Get(Key)
-	If Value Is MiniHtml Then
-		Return Value.As(MiniHtml)
-	Else If GetType(Value) = "[B" Then
-		Return MH.ConvertFromBytes(Value)
-	Else
-		Return Value
-	End If
+	Return MC.ReadFromCache(App.ctx, Key)
 End Sub
 
 Private Sub WriteToCache (Key As String, Value As Object)
-	App.ctx.Put(Key, Value)
+	MC.WriteToCache(App.ctx, Key, Value)
 End Sub
 
-Public Sub Show As String
+Public Sub Show (Req As ServletRequest) As String
 	Dim CacheName As String = "Products Page"
 	If ExistInCache(CacheName) = False Then
-		mShowLogout = True
-		WriteToCache(CacheName, ProductsPage)
+		WriteToCache(CacheName, ProductsPage(Req))
 	End If
 	Dim page1 As MiniHtml = ReadFromCache(CacheName)
 	Dim doc As MiniHtml
@@ -61,15 +48,11 @@ Public Sub Modal (Action As String, CategoryList As List, Data As Map) As String
 			Dim modal1 As MiniHtml = ReadFromCache(CacheName)
 			Dim select1 As MiniHtml = modal1.ChildById("category1")
 			select1.Children.Clear
-			Dim option1 As MiniHtml = MH.Option.up(select1)
-			option1.attr("value", "")
-			option1.text("Select Category")
-			option1.selected
-			option1.disabled
+			MH.OptionDisabled("Select Category").up(select1).selected
 			For Each row As Map In CategoryList
-				Dim option2 As MiniHtml = MH.Option.up(select1)
-				option2.attr("value", row.Get("id"))
-				option2.text(row.Get("category_name"))
+				Dim opt As MiniHtml = MH.Option.up(select1)
+				opt.attr("value", row.Get("id"))
+				opt.text(row.Get("category_name"))
 			Next
 			Return modal1.build
 		Case "Edit"
@@ -82,15 +65,13 @@ Public Sub Modal (Action As String, CategoryList As List, Data As Map) As String
 			id1.attr("value", Data.Get("id"))
 			Dim select1 As MiniHtml = modal1.ChildById("category2")
 			select1.Children.Clear
-			Dim option1 As MiniHtml = MH.Option.up(select1)
-			option1.attr("value", "")
-			option1.text("Select Category")
-			option1.disabled
+			MH.OptionDisabled("Select Category").up(select1) 
 			For Each row As Map In CategoryList
-				Dim option2 As MiniHtml = MH.Option.up(select1)
-				option2.attr("value", row.Get("id"))
-				option2.text(row.Get("category_name"))
-				If row.Get("id") = Data.Get("category_id") Then option2.selected
+				Dim opt As MiniHtml = MH.Option.up(select1)
+				opt.attr("value", row.Get("id"))
+				opt.text(row.Get("category_name"))
+				'If row.Get("id") = Data.Get("category_id") Then opt.selected
+				opt.selectedIf(row.Get("id") = Data.Get("category_id"))
 			Next
 			Dim input2 As MiniHtml = modal1.ChildById("code")
 			input2.attr("value", Data.Get("product_code"))
@@ -117,47 +98,31 @@ Public Sub Modal (Action As String, CategoryList As List, Data As Map) As String
 End Sub
 
 Public Sub Alert (info As AlertInfo) As String
-	Dim div1 As MiniHtml = MH.Div
-	div1.cls("alert alert-" & info.Status)
-	div1.text(info.Message)
-	Return div1.build
+	Return MH.Alert(info)
 End Sub
 
 Public Sub Toast (info As ToastInfo, data As List) As String
-	Dim div1 As MiniHtml = MH.Div
-	div1.attr("id", "products-container")
-	div1.attr("hx-swap-oob", "true")
-	ProductsTableFilled(data).up(div1)
-	Dim script1 As MiniJs
-	script1.Initialize
-	script1.AddCustomEventDispatch("entity:changed", _
-        CreateMap( _
-        "entity": info.Entity, _
-        "action": info.Action, _
-        "message": info.Message, _
-        "status": info.Status))
-	Return div1.build & CRLF & script1.Generate
+	Return MH.Toast("products-container", ProductsTableFilled(data), info)
 End Sub
 
 Public Sub RenderedTable (data As List) As String
 	Return ProductsTableFilled(data).build
 End Sub
 
-Private Sub ProductsPage As MiniHtml
+Private Sub ProductsPage (Req As ServletRequest) As MiniHtml
 	Dim main1 As MainView
 	main1.Initialize
 	main1.LoadContent(ContainerContent)
-	main1.LoadSubContent(GitHubLink)
+	main1.LoadSubContent(MH.GitHubLink)
 	main1.LoadModal(ContainerModal)
 	main1.LoadToast(ContainerToast)
 	Dim page1 As MiniHtml = main1.Render
-	Dim navitem1 As MiniHtml = page1.ChildById("nav-item")
-	If App.api.EnableHelp Then
-		HelpLink.up(navitem1)
-	End If
-	CategoriesLink.up(navitem1)
-	If mShowLogout Then
-		LogoutLink.up(navitem1)
+	Dim navbarCollapse As MiniHtml = page1.ChildById("navbarCollapse")
+	Dim navitem1 As MiniHtml = navbarCollapse.ChildByIndex(0)
+	If 1 = Req.GetSession.GetAttribute("admin") Then
+		MH.NavLinkItem("Categories", "/categories", "bi bi-tag me-2", "Categories").up(navitem1)
+		If App.api.EnableHelp Then MH.NavLinkItem("API", "/help", "bi bi-house me-2", "API").up(navitem1)
+		MH.NavLinkItem("Sign Out", "/logout", "bi-box-arrow-right", "Sign Out").up(navitem1)
 	End If
 	Return page1
 End Sub
@@ -493,63 +458,63 @@ Private Sub ContainerToast As MiniHtml
 	close1.attr("data-bs-dismiss", "toast")
 	Return div1
 End Sub
+'
+'Private Sub GitHubLink As MiniHtml
+'	Dim div1 As MiniHtml = MH.Div.cls("text-center mb-3")
+'	Dim a1 As MiniHtml = MH.Anchor.up(div1)
+'	a1.attr("href", "https://github.com/pyhoon/pakai-server-b4j")
+'	a1.cls("text-primary mr-1")
+'	a1.attr("aria-label", "github")
+'	a1.attr("title", "GitHub")
+'	a1.attr("target", "_blank")
+'	Dim svg1 As MiniHtml = MH.Svg.up(a1)
+'	svg1.attr("aria-hidden", "true")
+'	svg1.attr("width", "24")
+'	svg1.attr("height", "24")
+'	svg1.attr("version", "1.1")
+'	svg1.attr("viewBox", "0 0 16 16")
+'	Dim path1 As MiniHtml = MH.Path.up(svg1)
+'	path1.attr("fill-rule", "evenodd")
+'	path1.attr("d", "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z")
+'	Dim a2 As MiniHtml = MH.Anchor.up(div1)
+'	a2.attr("href", "https://github.com/pyhoon/pakai-server-b4j")
+'	a2.sty("text-decoration: none")
+'	a2.attr("target","_blank")
+'	Dim span1 As MiniHtml = MH.Span.up(a2)
+'	span1.sty("vertical-align: middle")
+'	span1.text("GitHub")
+'	Return div1
+'End Sub
 
-Private Sub GitHubLink As MiniHtml
-	Dim div1 As MiniHtml = MH.Div.cls("text-center mb-3")
-	Dim a1 As MiniHtml = MH.Anchor.up(div1)
-	a1.attr("href", "https://github.com/pyhoon/pakai-server-b4j")
-	a1.cls("text-primary mr-1")
-	a1.attr("aria-label", "github")
-	a1.attr("title", "GitHub")
-	a1.attr("target", "_blank")
-	Dim svg1 As MiniHtml = MH.Svg.up(a1)
-	svg1.attr("aria-hidden", "true")
-	svg1.attr("width", "24")
-	svg1.attr("height", "24")
-	svg1.attr("version", "1.1")
-	svg1.attr("viewBox", "0 0 16 16")
-	Dim path1 As MiniHtml = MH.Path.up(svg1)
-	path1.attr("fill-rule", "evenodd")
-	path1.attr("d", "M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0 0 16 8c0-4.42-3.58-8-8-8z")
-	Dim a2 As MiniHtml = MH.Anchor.up(div1)
-	a2.attr("href", "https://github.com/pyhoon/pakai-server-b4j")
-	a2.sty("text-decoration: none")
-	a2.attr("target","_blank")
-	Dim span1 As MiniHtml = MH.Span.up(a2)
-	span1.sty("vertical-align: middle")
-	span1.text("GitHub")
-	Return div1
-End Sub
-
-Private Sub LogoutLink As MiniHtml
-	Dim li1 As MiniHtml = MH.Li
-	li1.cls("nav-item d-block d-lg-block")
-	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-	a1.cls("nav-link float-end")
-	a1.attr("href", "/logout")
-	MH.Icon.up(a1).cls("bi bi-box-arrow-right me-2")
-	a1.text("Logout")
-	Return li1
-End Sub
-
-Private Sub CategoriesLink As MiniHtml
-	Dim li1 As MiniHtml = MH.Li
-	li1.cls("nav-item d-block d-lg-block")
-	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-	a1.cls("nav-link float-end")
-	a1.attr("href", "/categories")
-	MH.Icon.up(a1).cls("bi bi-tag me-2")
-	a1.text("Categories")
-	Return li1
-End Sub
-
-Private Sub HelpLink As MiniHtml
-	Dim li1 As MiniHtml = MH.Li
-	li1.cls("nav-item d-block d-lg-block")
-	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-	a1.cls("nav-link float-end")
-	a1.attr("href", "/help")
-	MH.Icon.up(a1).cls("bi bi-gear me-2")
-	a1.text("API")
-	Return li1
-End Sub
+'Private Sub LogoutLink As MiniHtml
+'	Dim li1 As MiniHtml = MH.Li
+'	li1.cls("nav-item d-block d-lg-block")
+'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
+'	a1.cls("nav-link float-end")
+'	a1.attr("href", "/logout")
+'	MH.Icon.up(a1).cls("bi bi-box-arrow-right me-2")
+'	a1.text("Logout")
+'	Return li1
+'End Sub
+'
+'Private Sub CategoriesLink As MiniHtml
+'	Dim li1 As MiniHtml = MH.Li
+'	li1.cls("nav-item d-block d-lg-block")
+'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
+'	a1.cls("nav-link float-end")
+'	a1.attr("href", "/categories")
+'	MH.Icon.up(a1).cls("bi bi-tag me-2")
+'	a1.text("Categories")
+'	Return li1
+'End Sub
+'
+'Private Sub HelpLink As MiniHtml
+'	Dim li1 As MiniHtml = MH.Li
+'	li1.cls("nav-item d-block d-lg-block")
+'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
+'	a1.cls("nav-link float-end")
+'	a1.attr("href", "/help")
+'	MH.Icon.up(a1).cls("bi bi-gear me-2")
+'	a1.text("API")
+'	Return li1
+'End Sub

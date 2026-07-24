@@ -5,44 +5,31 @@ Type=Class
 Version=10.5
 @EndOfDesignText@
 ' Categories View
-' Version 6.80
+' Version 0.30
 Sub Class_Globals
 	Private App As EndsMeet
-	Private mShowLogout As Boolean
 End Sub
 
 Public Sub Initialize
 	App = Main.App
 End Sub
 
-Public Sub setShowLogout (Value As Boolean)
-	mShowLogout = Value
-End Sub
-
 Private Sub ExistInCache (Key As String) As Boolean
-	Return App.ctx.ContainsKey(Key)
+	Return MC.ExistInCache(App.ctx, Key)
 End Sub
 
 Private Sub ReadFromCache (Key As String) As Object
-	Dim Value As Object = App.ctx.Get(Key)
-	If Value Is MiniHtml Then
-		Return Value.As(MiniHtml)
-	Else If GetType(Value) = "[B" Then
-		Return MH.ConvertFromBytes(Value)
-	Else
-		Return Value
-	End If
+	Return MC.ReadFromCache(App.ctx, Key)
 End Sub
 
 Private Sub WriteToCache (Key As String, Value As Object)
-	App.ctx.Put(Key, Value)
+	MC.WriteToCache(App.ctx, Key, Value)
 End Sub
 
-Public Sub Show As String
+Public Sub Show (Req As ServletRequest) As String
 	Dim CacheName As String = "Categories Page"
 	If ExistInCache(CacheName) = False Then
-		mShowLogout = True
-		WriteToCache(CacheName, CategoriesPage)
+		WriteToCache(CacheName, CategoriesPage(Req))
 	End If
 	Dim page1 As MiniHtml = ReadFromCache(CacheName)
 	Dim doc As MiniHtml
@@ -74,47 +61,31 @@ Public Sub Modal (Action As String) As String
 End Sub
 
 Public Sub Alert (info As AlertInfo) As String
-	Dim div1 As MiniHtml = MH.Div
-	div1.cls("alert alert-" & info.Status)
-	div1.text(info.Message)
-	Return div1.build
+	Return MH.Alert(info)
 End Sub
 
 Public Sub Toast (info As ToastInfo, data As List) As String
-	Dim div1 As MiniHtml = MH.Div
-	div1.attr("id", "categories-container")
-	div1.attr("hx-swap-oob", "true")
-	CategoriesTableFilled(data).up(div1)
-	Dim script1 As MiniJs
-	script1.Initialize
-	script1.AddCustomEventDispatch("entity:changed", _
-        CreateMap( _
-        "entity": info.Entity, _
-        "action": info.Action, _
-        "message": info.Message, _
-        "status": info.Status))
-	Return div1.build & CRLF & script1.Generate
+	Return MH.Toast("categories-container", CategoriesTableFilled(data), info)
 End Sub
 
 Public Sub RenderedTable (data As List) As String
 	Return CategoriesTableFilled(data).build
 End Sub
 
-Private Sub CategoriesPage As MiniHtml
+Private Sub CategoriesPage (Req As ServletRequest) As MiniHtml
 	Dim main1 As MainView
 	main1.Initialize
 	main1.LoadContent(ContainerContent)
 	main1.LoadModal(ContainerModal)
 	main1.LoadToast(ContainerToast)
 	Dim page1 As MiniHtml = main1.Render
-	Dim navitem1 As MiniHtml = page1.ChildById("nav-item")
-	If App.api.EnableHelp Then
-		HelpLink.up(navitem1)
-	End If
-	HomeLink.up(navitem1)
-	If mShowLogout Then
-		LogoutLink.up(navitem1)
-	End If
+	Dim navbarCollapse As MiniHtml = page1.ChildById("navbarCollapse")
+	Dim navitem1 As MiniHtml = navbarCollapse.ChildByIndex(0)
+	If 1 = Req.GetSession.GetAttribute("admin") Then
+		MH.NavLinkItem("Home", "/", "bi bi-house me-2", "Home").up(navitem1)
+		If App.api.EnableHelp Then MH.NavLinkItem("API", "/help", "bi bi-house me-2", "API").up(navitem1)
+		MH.NavLinkItem("Sign Out", "/logout", "bi-box-arrow-right", "Sign Out").up(navitem1)
+	End If	
 	Return page1
 End Sub
 
@@ -368,35 +339,35 @@ Private Sub ContainerToast As MiniHtml
 	Return div1
 End Sub
 
-Private Sub LogoutLink As MiniHtml
-	Dim li1 As MiniHtml = MH.Li
-	li1.cls("nav-item d-block d-lg-block")
-	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-	a1.cls("nav-link float-end")
-	a1.attr("href", "/logout")
-	MH.Icon.up(a1).cls("bi bi-box-arrow-right me-2")
-	a1.text("Logout")
-	Return li1
-End Sub
+'Private Sub LogoutLink As MiniHtml
+'	Dim li1 As MiniHtml = MH.Li
+'	li1.cls("nav-item d-block d-lg-block")
+'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
+'	a1.cls("nav-link float-end")
+'	a1.attr("href", "/logout")
+'	MH.Icon.up(a1).cls("bi bi-box-arrow-right me-2")
+'	a1.text("Logout")
+'	Return li1
+'End Sub
 
-Private Sub HomeLink As MiniHtml
-	Dim li1 As MiniHtml = MH.Li
-	li1.cls("nav-item d-block d-lg-block")
-	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-	a1.cls("nav-link float-end")
-	a1.attr("href", "/")
-	MH.Icon.up(a1).cls("bi bi-house me-2")
-	a1.text("Home")
-	Return li1
-End Sub
-
-Private Sub HelpLink As MiniHtml
-	Dim li1 As MiniHtml = MH.Li
-	li1.cls("nav-item d-block d-lg-block")
-	Dim a1 As MiniHtml = MH.Anchor.up(li1)
-	a1.cls("nav-link float-end")
-	a1.attr("href", "/help")
-	MH.Icon.up(a1).cls("bi bi-gear me-2")
-	a1.text("API")
-	Return li1
-End Sub
+'Private Sub HomeLink As MiniHtml
+'	Dim li1 As MiniHtml = MH.Li
+'	li1.cls("nav-item d-block d-lg-block")
+'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
+'	a1.cls("nav-link float-end")
+'	a1.attr("href", "/")
+'	MH.Icon.up(a1).cls("bi bi-house me-2")
+'	a1.text("Home")
+'	Return li1
+'End Sub
+'
+'Private Sub HelpLink As MiniHtml
+'	Dim li1 As MiniHtml = MH.Li
+'	li1.cls("nav-item d-block d-lg-block")
+'	Dim a1 As MiniHtml = MH.Anchor.up(li1)
+'	a1.cls("nav-link float-end")
+'	a1.attr("href", "/help")
+'	MH.Icon.up(a1).cls("bi bi-gear me-2")
+'	a1.text("API")
+'	Return li1
+'End Sub
