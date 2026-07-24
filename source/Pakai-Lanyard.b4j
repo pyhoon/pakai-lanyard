@@ -11,35 +11,39 @@ FileGroup2=config
 FileGroup3=config
 FileGroup4=config
 Group=App
-Library1=endsmeet
-Library2=jcore
-Library3=minicss
-Library4=minihtml
-Library5=minijs
-Library6=miniormutils
-Library7=webapiutils
-Library8=lanyard
+Library1=byteconverter
+Library10=encryption
+Library2=endsmeet
+Library3=jcore
+Library4=lanyard
+Library5=minicss
+Library6=minihtml
+Library7=minijs
+Library8=miniormutils
+Library9=webapiutils
 Module1=AuthFilter
-Module10=HttpsFilter
-Module11=MainView
-Module12=MH
-Module13=ORM
-Module14=ProductsApiHandler
-Module15=ProductsHandler
-Module16=ProductsModel
-Module17=ProductsView
-Module18=UsersModel
+Module10=HelpHandler
+Module11=HttpsFilter
+Module12=MainView
+Module13=MC
+Module14=MH
+Module15=ORM
+Module16=ProductsApiHandler
+Module17=ProductsHandler
+Module18=ProductsModel
+Module19=ProductsView
 Module2=AuthHandler
+Module20=UsersModel
 Module3=AuthView
 Module4=CategoriesApiHandler
 Module5=CategoriesHandler
 Module6=CategoriesModel
 Module7=CategoriesView
-Module8=FindApiHandler
-Module9=HelpHandler
+Module8=Encryption
+Module9=FindApiHandler
 NumberOfFiles=4
-NumberOfLibraries=8
-NumberOfModules=18
+NumberOfLibraries=10
+NumberOfModules=20
 Version=10.5
 @EndOfDesignText@
 #Region  Project Attributes
@@ -70,8 +74,6 @@ Sub Process_Globals
 	Public App	As EndsMeet
 	Public Api	As ApiSettings
 	Public Const APP_VERSION As String = "1.00"
-	Type AlertInfo (Message As String, Status As String)
-	Type ToastInfo (Entity As String, Action As String, Message As String, Status As String)
 End Sub
 
 ' <link>Open in browser|http://127.0.0.1:8080</link>
@@ -80,6 +82,7 @@ Sub AppStart (Args() As String)
 	App.Initialize
 	App.LoadConfig
 	App.LogEnabled = True
+	App.staticfiles.Folder = File.Combine(File.DirApp, "www")
     #If Release
 	'App.ssl.Enabled = True
 	'App.RedirectToHttps = True
