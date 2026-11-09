@@ -822,7 +822,7 @@ Private Sub GenerateAccordionBody (section As VerbSection) As MiniHtml
 	div8.attr(":class", "alerts[apiId]?.type")
 	div8.cls("alert")
 	div8.attr("x-text", "alerts[apiId]?.message")
-	div8.attr3("x-transition")
+	div8.bool("x-transition")
 	div8.FormatAttributes = True
 	div8.multiline
 

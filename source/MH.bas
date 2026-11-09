@@ -288,7 +288,7 @@ Public Sub InputFile (id As String, name As String, accept As String, multiple A
 	If id <> "" Then input1.attr("id", id)
 	If name <> "" Then input1.attr("name", name)
 	If accept <> "" Then input1.attr("accept", accept)
-	If multiple Then input1.attr3("multiple")
+	If multiple Then input1.bool("multiple")
 	Return input1
 End Sub
 
@@ -311,7 +311,7 @@ Public Sub CheckboxInput (id As String, name As String, value As String, text As
 	If id <> "" Then input1.attr("id", id)
 	If name <> "" Then input1.attr("name", name)
 	If value <> "" Then input1.attr("value", value)
-	If checked Then input1.attr3("checked")
+	If checked Then input1.bool("checked")
 	If text <> "" Then
 		Dim label1 As MiniHtml = Label.up(div1)
 		label1.cls("form-check-label")
@@ -329,7 +329,7 @@ Public Sub RadioInput (name As String, id As String, value As String, text As St
 	If id <> "" Then input1.attr("id", id)
 	If name <> "" Then input1.attr("name", name)
 	If value <> "" Then input1.attr("value", value)
-	If checked Then input1.attr3("checked")
+	If checked Then input1.bool("checked")
 	If text <> "" Then
 		Dim label1 As MiniHtml = Label.up(div1)
 		label1.cls("form-check-label")

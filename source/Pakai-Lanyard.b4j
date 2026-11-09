@@ -44,7 +44,7 @@ Module9=FindApiHandler
 NumberOfFiles=4
 NumberOfLibraries=10
 NumberOfModules=20
-Version=10.5
+Version=10.7
 @EndOfDesignText@
 #Region  Project Attributes
 'Product:   Pakai Lanyard
@@ -81,8 +81,7 @@ End Sub
 Sub AppStart (Args() As String)
 	App.Initialize
 	App.LoadConfig
-	App.LogEnabled = True
-	App.staticfiles.Folder = File.Combine(File.DirApp, "www")
+	App.AssetsFolder = File.Combine(File.DirApp, "www")
     #If Release
 	'App.ssl.Enabled = True
 	'App.RedirectToHttps = True
@@ -112,7 +111,7 @@ Sub AppStart (Args() As String)
 	App.Get("/help", "HelpHandler")
 	
 	App.Start
-	App.LogStartupMessage
+	Log(App.StartupMessage)
 	App.ctx.Put("VERSION", APP_VERSION)
 	Log($"App version: ${APP_VERSION}"$)
 	Log($"Open the following URL from your web browser"$)
