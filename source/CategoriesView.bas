@@ -5,7 +5,7 @@ Type=Class
 Version=10.5
 @EndOfDesignText@
 ' Categories View
-' Version 0.30
+' Version 0.40
 Sub Class_Globals
 	Private App As EndsMeet
 End Sub
@@ -32,10 +32,7 @@ Public Sub Show (Req As ServletRequest) As String
 		WriteToCache(CacheName, CategoriesPage(Req))
 	End If
 	Dim page1 As MiniHtml = ReadFromCache(CacheName)
-	Dim doc As MiniHtml
-	doc.Initialize("doctype")
-	doc.Append(page1.build)
-	Return doc.ToString
+	Return page1.build
 End Sub
 
 Public Sub Modal (Action As String, Data As Map) As String
@@ -64,7 +61,7 @@ Public Sub Modal (Action As String, Data As Map) As String
 			Dim id1 As MiniHtml = modal1.ChildById("id")
 			id1.attr("value", Data.Get("id"))
 			Dim p1 As MiniHtml = modal1.ChildById("p1")
-			p1.text2($"Delete ${Data.Get("product_name")} (${Data.Get("product_code")})?"$)			
+			p1.replace($"Delete ${Data.Get("product_name")} (${Data.Get("product_code")})?"$)
 	End Select
 	Dim modal1 As MiniHtml = ReadFromCache(CacheName)
 	Return modal1.build
@@ -128,8 +125,8 @@ Private Sub CategoriesTableFilled (data As List) As MiniHtml
 	tbody1.Children.Clear
 	For Each row As Map In data
 		Dim tr1 As MiniHtml = ReadFromCache("Categories Table Row") ' bytes()
-		tr1.ChildByIndex(0).text2(row.Get("id"))
-		tr1.ChildByIndex(1).text2(row.Get("category_name"))
+		tr1.ChildByIndex(0).replace(row.Get("id"))
+		tr1.ChildByIndex(1).replace(row.Get("category_name"))
 		tr1.ChildByIndex(2).ChildByIndex(0).attr("hx-get", "/hx/categories/edit/" & row.Get("id"))
 		tr1.ChildByIndex(2).ChildByIndex(1).attr("hx-get", "/hx/categories/delete/" & row.Get("id"))
 		tr1.up(tbody1)
@@ -207,7 +204,7 @@ Private Sub ModalDelete As MiniHtml
 	Dim modalBody As MiniHtml = MH.Div.up(form1).cls("modal-body")
 	MH.Div.up(modalBody).attr("id", "modal-messages")
 	MH.HiddenInput("id", "id", "").up(modalBody)
-	MH.P.up(modalBody).Id = "p1"
+	MH.P.up(modalBody).attr("id", "p1")
 	
 	Dim modalFooter As MiniHtml = MH.Div.up(form1).cls("modal-footer")
 	MH.ButtonSubmit("Delete", "btn btn-danger px-3").up(modalFooter)

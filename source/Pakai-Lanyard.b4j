@@ -12,10 +12,9 @@ FileGroup3=config
 FileGroup4=config
 Group=App
 Library1=byteconverter
-Library10=encryption
-Library2=endsmeet
-Library3=jcore
-Library4=lanyard
+Library2=encryption
+Library3=endsmeet
+Library4=jcore
 Library5=minicss
 Library6=minihtml
 Library7=minijs
@@ -42,13 +41,13 @@ Module7=CategoriesView
 Module8=Encryption
 Module9=FindApiHandler
 NumberOfFiles=4
-NumberOfLibraries=10
+NumberOfLibraries=9
 NumberOfModules=20
 Version=10.7
 @EndOfDesignText@
 #Region  Project Attributes
 'Product:   Pakai Lanyard
-'Version:   0.30
+'Version:   0.40
 'License:   MIT License
 'Developer: Poon Yip Hoon (Aeric)
 #CommandLineArgs:
@@ -59,11 +58,11 @@ Version=10.7
 #Else If MySQL
 #AdditionalJar: mysql-connector-j-9.3.0
 #Else
-#AdditionalJar: sqlite-jdbc-3.7.2
+#AdditionalJar: sqlite-jdbc
 #End If
 #Region  Macros
 #Macro: Title, Class Templates, ide://run?File=%PROJECT%\create_excluded.bat&Args=..\AuthFilter.bas&Args=..\AuthHandler.bas&Args=..\AuthView.bas&Args=..\UsersModel.bas
-#Macro: Title, Update Manifest, ide://run?File=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%\..&Args=%PROJECT%\..&Args=Version&Args=0.30
+#Macro: Title, Update Manifest, ide://run?File=%ADDITIONAL%\..\B4X\manifest-writer.jar&Args=%PROJECT%\..&Args=%PROJECT%\..&Args=Version&Args=0.40
 #Macro: Title, Create B4xLib, ide://run?File=%JAVABIN%\jar.exe&WorkingDirectory=..\&Args=-cMf&Args=..\release\PakaiLanyard.b4xlib&Args=*.b4x_excluded&Args=Snippets&Args=..\manifest.txt&Args=..\LICENSE.txt
 #Macro: Title, Release folder, ide://run?File=%WINDIR%\SysWOW64\explorer.exe&Args=%PROJECT%\..\release
 #Macro: Title, Copy to AddLibs, ide://run?File=%COMSPEC%&Args=/c&Args=copy&Args=%PROJECT%\..\release\*.b4xlib&Args=%ADDITIONAL%\..\B4X

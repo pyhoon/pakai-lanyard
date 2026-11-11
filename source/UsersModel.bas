@@ -5,7 +5,7 @@ Type=Class
 Version=10.5
 @EndOfDesignText@
 ' Users Model
-' Version 0.30
+' Version 0.40
 Sub Class_Globals
 	Private DB As MiniORM
 	Type Users (username As String, email As String, hash As String, salt As String, role As String)

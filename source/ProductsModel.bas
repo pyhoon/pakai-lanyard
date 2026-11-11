@@ -5,7 +5,7 @@ Type=Class
 Version=10.5
 @EndOfDesignText@
 ' Products Model
-' Version 0.30
+' Version 0.40
 Sub Class_Globals
 	Private DB As MiniORM
 End Sub
