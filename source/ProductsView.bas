@@ -189,8 +189,8 @@ Private Sub ProductsTableRow As MiniHtml
 	MH.Td.up(tr1).cls("align-middle").sty("text-align: right")
 	Dim td6 As MiniHtml = MH.Td.up(tr1)
 	td6.cls("align-middle text-center px-1 py-1")
-	MH.AnchorIcon("edit text-primary mx-2", "/hx/products/edit/{id}", "Edit", "bi bi-pencil").up(td6)
-	MH.AnchorIcon("delete text-danger mx-2", "/hx/products/delete/{id}", "Delete", "bi bi-trash3").up(td6)
+	MH.AnchorIcon("edit text-primary mx-2", "/hx/products/edit/{id}", "bi bi-pencil", "Edit").up(td6)
+	MH.AnchorIcon("delete text-danger mx-2", "/hx/products/delete/{id}", "bi bi-trash3", "Delete").up(td6)
 	Return tr1
 End Sub
 

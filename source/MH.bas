@@ -701,7 +701,7 @@ Public Sub NavLinkItemImage (href As String, img_src As String, img_title As Str
 End Sub
 
 'Deprecated
-Public Sub AnchorIcon (cls As String, hx_get As String, title_text As String, icon_class As String) As MiniHtml
+Public Sub AnchorIcon (cls As String, hx_get As String, icon_class As String, icon_title As String) As MiniHtml
 	Dim a1 As MiniHtml = Anchor
 	a1.cls(cls)
 	a1.attr("hx-get", hx_get)
@@ -710,7 +710,7 @@ Public Sub AnchorIcon (cls As String, hx_get As String, title_text As String, ic
 	a1.attr("data-bs-target", "#modal-container")
 	a1.attr("data-bs-toggle", "modal")
 	Icon.up(a1).cls(icon_class)
-	a1.attr("title", title_text)
+	a1.attr("title", icon_title)
 	Return a1
 End Sub
 

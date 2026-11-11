@@ -153,8 +153,8 @@ Public Sub CategoriesTableRow As MiniHtml
 	td2.cls("align-middle")'.text("{name}")
 	Dim td3 As MiniHtml = MH.Td.up(tr1)
 	td3.cls("align-middle text-center px-1 py-1")
-	MH.AnchorIcon("edit text-primary mx-2", "/hx/categories/edit/{id}", "Edit", "bi bi-pencil").up(td3)
-	MH.AnchorIcon("delete text-danger mx-2", "/hx/categories/delete/{id}", "Delete", "bi bi-trash3").up(td3)
+	MH.AnchorIcon("edit text-primary mx-2", "/hx/categories/edit/{id}", "bi bi-pencil", "Edit").up(td3)
+	MH.AnchorIcon("delete text-danger mx-2", "/hx/categories/delete/{id}", "bi bi-trash3", "Delete").up(td3)
 	Return tr1
 End Sub
 
