@@ -1,6 +1,6 @@
 # Pakai Lanyard
 
-Version: 0.20
+Version: 0.40
 
 Auth extension for [Pakai Server v6](https://github.com/pyhoon/pakai-server-b4j) — a B4J web framework built with EndsMeet, MiniORM, MiniHtml, HTMX, and AlpineJS.
 
